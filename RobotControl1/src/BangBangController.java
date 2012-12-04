@@ -34,8 +34,27 @@ public class BangBangController extends RobotController {
 	@Override
 	public void doWork() throws Exception {
 		sensorMgr.update();
-		calculateOutputs();
+		if(checkStopConditions()) {
+			setWaitTime(2000);
+			mL = 0;
+			mR = 0;
+		} else {
+			calculateOutputs();
+		}
 		writeOutputs();
+	}
+
+	private boolean checkStopConditions() {
+		Sensor maxDistanceValue = sensorMgr.getMaxDistanceValue();
+		if(maxDistanceValue.getValueDistance() > 1000)
+			try {
+				System.out.println("Controller stopped");
+				return true;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		return false;
 	}
 
 	private void writeOutputs() {

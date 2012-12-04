@@ -4,18 +4,14 @@ public class Sensor {
 	private final int id;	
 	private String name;
 	
-	private int value;
-	private double side;
+	private int valueLight = 1000;
+	private int valueDistance = 1000;
+	private double side = 1;
 	private boolean front = true;
 	
 	public Sensor(int id, String name) {
 		this.id = id;
 		this.name = name;
-	}
-	
-	public Sensor(int id, String name, int value) {
-		this(id, name);
-		this.value = value;
 	}
 	
 	public String getName() {
@@ -31,11 +27,11 @@ public class Sensor {
 	}
 
 	public int getValue() {
-		return value;
+		return valueLight;
 	}
 
 	public void setValue(int value) {
-		this.value = value;
+		this.valueLight = value;
 	}
 
 	public double getSide() {
@@ -56,6 +52,14 @@ public class Sensor {
 	 */
 	public void setFront(boolean front) {
 		this.front = front;
+	}
+
+	public int getValueDistance() {
+		return valueDistance;
+	}
+
+	public void setValueDistance(int valueDistance) {
+		this.valueDistance = valueDistance;
 	}
 
 	

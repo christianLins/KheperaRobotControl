@@ -54,7 +54,7 @@ public class SensorManager {
 		rearLeft.setFront(false);
 		sensors.put(rearLeft.getName(), rearLeft);
 		
-		update();
+//		update();
 	}
 	
 	public Sensor getSensor(String location) {
@@ -113,7 +113,9 @@ public class SensorManager {
 			try {
 				lightValue = ctrl.getLightValue(s.getId());
 				s.setValue(lightValue);
-				System.out.println("Updated sensor " + s.getName() + " to " + s.getValue());
+				int distanceValue = ctrl.getDistanceValue(s.getId());
+				s.setValueDistance(distanceValue);
+				System.out.println("Updated sensor " + s.getName() + " to light value" + s.getValue() + " and to dist value " + s.getValueDistance());
 			} catch(Exception e) {
 				System.out.println("Problems during sensor updating " + s.getId());
 			}
@@ -127,6 +129,25 @@ public class SensorManager {
 			if(s.getValue() < min.getValue()) min = s;
 		}
 		return min;
+	}
+
+	public Sensor getMinDistanceValue() {
+		Sensor min = null;
+		for(Sensor s : sensors.values()) {
+			if(min == null) min = s;
+			if(s.getValueDistance() < min.getValueDistance()) min = s;
+		}
+		return min;
+		
+	}
+
+	public Sensor getMaxDistanceValue() {
+		Sensor max = null;
+		for(Sensor s : sensors.values()) {
+			if(max == null) max = s;
+			if(s.getValueDistance() > max.getValueDistance()) max = s;
+		}
+		return max;
 	}
 	
 }
