@@ -6,7 +6,7 @@ public class Sensor {
 	
 	private int valueLight = 1000;
 	private int valueDistance = 1000;
-	private double side = 1;
+	private double sideFactor = 1;
 	private boolean front = true;
 	
 	public Sensor(int id, String name) {
@@ -26,22 +26,33 @@ public class Sensor {
 		return id;
 	}
 
-	public int getValue() {
+	public int getLightValue() {
 		return valueLight;
 	}
 
-	public void setValue(int value) {
+	public void setLightValue(int value) {
 		this.valueLight = value;
 	}
 
-	public double getSide() {
-		return side;
+	/**
+	 * if it is left side its negative
+	 * if it is right side its positive
+	 * the value increases, if sensor is longer away
+	 * 
+	 * @return value
+	 */
+	public double getSideFactor() {
+		return sideFactor;
 	}
 	
-	public void setSide(double direction) {
-		this.side = direction;
+	public void setSideFactor(double sideFactor) {
+		this.sideFactor = sideFactor;
 	}
 
+	/**
+	 * is sensor in front positioned
+	 * @return true if front
+	 */
 	public boolean isFront() {
 		return front;
 	}

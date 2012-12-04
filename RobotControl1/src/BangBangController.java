@@ -5,7 +5,6 @@ public class BangBangController extends RobotController {
 	
 	private SensorManager sensorMgr;
 	
-	
 	private double baseSpeed = 5;
 	
 	
@@ -31,6 +30,13 @@ public class BangBangController extends RobotController {
 	}
 
 
+	/**
+	 * routine 
+	 * - checks input values
+	 * - checks stop conditions
+	 * - calculate outputs
+	 * - and write the outputs to robot
+	 */
 	@Override
 	public void doWork() throws Exception {
 		sensorMgr.update();
@@ -45,8 +51,9 @@ public class BangBangController extends RobotController {
 	}
 
 	private boolean checkStopConditions() {
+		// robot is close to object
 		Sensor maxDistanceValue = sensorMgr.getMaxDistanceValue();
-		if(maxDistanceValue.getValueDistance() > 1000)
+		if(maxDistanceValue.getValueDistance() > 800)
 			try {
 				System.out.println("Controller stopped");
 				return true;
@@ -57,6 +64,9 @@ public class BangBangController extends RobotController {
 		return false;
 	}
 
+	/**
+	 * set robot outputs
+	 */
 	private void writeOutputs() {
 		System.out.println("Set motor speed to " + mL + "|" + mR);
 		setMotorSpeeds(mL, mR);
@@ -67,14 +77,14 @@ public class BangBangController extends RobotController {
 		System.out.println("min light value has sensor " + min.getName());
 		
 		if(min.isFront()) {
-			if(0 <= min.getSide()) {
+			if(0 <= min.getSideFactor()) {
 				// is on right side
 				mL = (int) baseSpeed;
-				mR = (int)(baseSpeed * min.getSide());
+				mR = (int)(baseSpeed * min.getSideFactor());
 			} else {
 				// is on left side
 				mR = (int) baseSpeed;
-				mL = (int)(baseSpeed * -min.getSide());
+				mL = (int)(baseSpeed * -min.getSideFactor());
 			}
 		} else {
 			// drive backward or turn
