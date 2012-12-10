@@ -3,7 +3,14 @@ import java.util.Map;
 
 import edu.wsu.KheperaSimulator.RobotController;
 
-
+/**
+ * handles inputs
+ * additional functions
+ * - interpolation of sensor values
+ * - pattern recognition (ball, wall,...)
+ * @author Chris
+ *
+ */
 public class SensorManager {
 
 	/**
@@ -124,7 +131,7 @@ public class SensorManager {
 				s.setLightValue(lightValue);
 				int distanceValue = ctrl.getDistanceValue(s.getId());
 				s.setValueDistance(distanceValue);
-				System.out.println("Updated sensor " + s.getName() + " to light value" + s.getLightValue() + " and to dist value " + s.getValueDistance());
+//				System.out.println("Updated sensor " + s.getName() + " to light value" + s.getLightValue() + " and to dist value " + s.getDistanceValue());
 			} catch(Exception e) {
 				System.out.println("Problems during sensor updating " + s.getId());
 			}
@@ -148,11 +155,11 @@ public class SensorManager {
 	 * the min value is the max distance in reality!
 	 * @return min sensor value
 	 */
-	public Sensor getMinDistanceValue() {
+	public Sensor getFarestDistanceValue() {
 		Sensor min = null;
 		for(Sensor s : sensors.values()) {
 			if(min == null) min = s;
-			if(s.getValueDistance() < min.getValueDistance()) min = s;
+			if(s.getDistanceValue() < min.getDistanceValue()) min = s;
 		}
 		return min;
 		
@@ -162,13 +169,61 @@ public class SensorManager {
 	 * the max value is the min distance in reality!
 	 * @return max sensor value
 	 */
-	public Sensor getMaxDistanceValue() {
+	public Sensor getShortestDistanceValue() {
 		Sensor max = null;
 		for(Sensor s : sensors.values()) {
 			if(max == null) max = s;
-			if(s.getValueDistance() > max.getValueDistance()) max = s;
+			if(s.getDistanceValue() > max.getDistanceValue()) max = s;
 		}
 		return max;
+	}
+	
+	public boolean isWallOnLeftSide() {
+		Sensor max = null;
+		Sensor max2 = null;
+		for(Sensor s : sensors.values()) {
+			if(max == null) {
+				max = s;
+			} else if(max2 == null) {
+				max2 = s;
+			}			
+			if(s.getDistanceValue() > max.getDistanceValue()) {
+				max2 = max;
+				max = s;
+			} else if(max2 != null) {
+				if(s.getDistanceValue() > max2.getDistanceValue()) max2 = s;
+			}
+		}
+		if ((max == getLeft() && max2 == getRearLeft()) || (max2 == getLeft() && max == getRearLeft())) {
+			System.out.println("wall is on left side");
+			return true;
+		}
+		System.out.println("wall is NOT on left side - max sensors are " + max.getName() + " and " + max2.getName());
+		return false;
+	}
+	
+	public boolean isWallOnRightSide() {
+		Sensor max = null;
+		Sensor max2 = null;
+		for(Sensor s : sensors.values()) {
+			if(max == null) {
+				max = s;
+			} else if(max2 == null) {
+				max2 = s;
+			}			
+			if(s.getDistanceValue() > max.getDistanceValue()) {
+				max2 = max;
+				max = s;
+			} else if(max2 != null) {
+				if(s.getDistanceValue() > max2.getDistanceValue()) max2 = s;
+			}
+		}
+		if ((max == getRight() && max2 == getRearRight()) || (max2 == getRight() && max == getRearRight())) {
+			System.out.println("Wall is on right side");
+			return true;
+		}
+		System.out.println("wall is NOT on right side - max sensors are " + max.getName() + " and " + max2.getName());
+		return false;
 	}
 	
 }

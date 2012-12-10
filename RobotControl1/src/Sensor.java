@@ -65,12 +65,16 @@ public class Sensor {
 		this.front = front;
 	}
 
-	public int getValueDistance() {
+	public int getDistanceValue() {
 		return valueDistance;
 	}
 
 	public void setValueDistance(int valueDistance) {
 		this.valueDistance = valueDistance;
+	}
+
+	public boolean isLeft() {
+		return 0 > getSideFactor();
 	}
 
 	
