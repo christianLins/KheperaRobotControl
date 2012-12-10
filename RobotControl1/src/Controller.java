@@ -113,7 +113,7 @@ public abstract class Controller extends RobotController implements ActionContex
 	@Override
 	public void actionDone(Action action) {
 		int indexOf = actions.indexOf(action);
-		if(actions.size() >= indexOf+1) {
+		if(indexOf+1  < actions.size()) {
 			System.out.println("Switch to next action");
 			currentAction = actions.get(indexOf+1);
 		} else {

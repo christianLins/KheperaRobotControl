@@ -73,7 +73,7 @@ public class AvancedBangBangController extends RobotController {
 	}
 
 	private void calculateOutputs() {
-		Sensor min = sensorMgr.getLowestLightValue();
+		Sensor min = sensorMgr.getBrightestLightValue();
 		System.out.println("min light value has sensor " + min.getName());
 		
 		if(min.isFront()) {
