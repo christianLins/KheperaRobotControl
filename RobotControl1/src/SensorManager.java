@@ -98,6 +98,17 @@ public class SensorManager {
 		return matrix;
 	}
 	
+	public float[] getSensorLightVectorFront() {
+		float[] matrix = new float[sensorList.size()-2];
+		int i = 0;
+		for(Sensor s : sensorList) {
+			if(i < matrix.length) {
+				matrix[i++] = s.getLightValue();
+			}
+		}		
+		return matrix;
+	}
+	
 	public Sensor getSensor(String location) {
 		return sensors.get(location);
 	}
