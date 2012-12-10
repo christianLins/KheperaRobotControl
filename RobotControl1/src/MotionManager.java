@@ -47,6 +47,13 @@ public class MotionManager {
 		ctrl.setMotorSpeeds(0, 0);
 		
 	}
+
+	public void scaleMotorSpeedByBaseSpeed(float left, float right) {
+		int l = (int)((double)baseSpeed*left);
+		int r = (int)((double)baseSpeed*right);
+		System.out.println("Go in direction " + l + " | " + r + " (input = " + left + " | " + right + ")");
+		setMotorSpeed(l, r);		
+	}
 	
 	
 	

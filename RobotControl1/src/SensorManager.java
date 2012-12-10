@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import edu.wsu.KheperaSimulator.RobotController;
@@ -19,6 +21,7 @@ public class SensorManager {
 	private RobotController ctrl;
 		
 	private Map<String,Sensor> sensors;
+	private List<Sensor> sensorList;
 
 	public SensorManager(RobotController controller) {
 		this.ctrl = controller;
@@ -32,39 +35,67 @@ public class SensorManager {
 		if(ctrl == null) return;
 		
 		sensors = new HashMap<String, Sensor>();
+		sensorList = new LinkedList<Sensor>();
+		
+		
 		Sensor left = new Sensor(0, "left");
 		left.setSideFactor(-0.5);
-		sensors.put(left.getName(), left);
+		addSensor(left);
+		
 		
 		Sensor leftFront = new Sensor(1, "leftFront");
 		leftFront.setSideFactor(-0.3);
-		sensors.put(leftFront.getName(), leftFront);
+		addSensor(leftFront);
 		
 		Sensor frontLeft = new Sensor(2, "frontLeft");
 		frontLeft.setSideFactor(-0.1);
-		sensors.put(frontLeft.getName(), frontLeft);
+		addSensor(frontLeft);
 		
 		Sensor frontRight = new Sensor(3, "frontRight");
 		frontRight.setSideFactor(0.1);
-		sensors.put(frontRight.getName(), frontRight);
+		addSensor(frontRight);
 		
 		Sensor rightFront = new Sensor(4, "rightFront");
 		rightFront.setSideFactor(0.3);
-		sensors.put(rightFront.getName(), rightFront);
+		addSensor(rightFront);
 		
 		Sensor right = new Sensor(5, "right");
 		left.setSideFactor(0.5);
-		sensors.put(right.getName(), right);
+		addSensor(right);
 		
 		Sensor rearRight = new Sensor(6, "rearRight");
 		rearRight.setSideFactor(-0.2);
 		rearRight.setFront(false);
-		sensors.put(rearRight.getName(), rearRight);
+		addSensor(rearRight);
 		
 		Sensor rearLeft = new Sensor(7, "rearLeft");
 		rearLeft.setSideFactor(0.2);
 		rearLeft.setFront(false);
-		sensors.put(rearLeft.getName(), rearLeft);
+		addSensor(rearLeft);
+	}
+	
+	private void addSensor(Sensor sensor) {
+		sensors.put(sensor.getName(), sensor);
+		sensorList.add(sensor);
+	}
+
+	public float[] getSensorDistanceVector() {
+		float[] matrix = new float[sensorList.size()];
+		int i = 0;
+		for(Sensor s : sensorList) {
+			matrix[i++] = s.getDistanceValue();
+		}		
+		return matrix;
+	}
+	
+	public float[] getSensorLightVector() {
+		float[] matrix = new float[sensorList.size()];
+		int i = 0;
+		for(Sensor s : sensorList) {
+//			System.out.println("light matrix " + i + " = " + s.getName());
+			matrix[i++] = s.getLightValue();
+		}		
+		return matrix;
 	}
 	
 	public Sensor getSensor(String location) {
@@ -194,7 +225,8 @@ public class SensorManager {
 				if(s.getDistanceValue() > max2.getDistanceValue()) max2 = s;
 			}
 		}
-		if ((max == getLeft() && max2 == getRearLeft()) || (max2 == getLeft() && max == getRearLeft())) {
+		if (((max == getLeft() && max2 == getRearLeft()) || (max2 == getLeft() && max == getRearLeft())) || 
+				((max == getLeft() && max2 == getLeftFront()) || (max2 == getLeft() && max == getLeftFront()))) {
 			System.out.println("wall is on left side");
 			return true;
 		}
@@ -218,11 +250,36 @@ public class SensorManager {
 				if(s.getDistanceValue() > max2.getDistanceValue()) max2 = s;
 			}
 		}
-		if ((max == getRight() && max2 == getRearRight()) || (max2 == getRight() && max == getRearRight())) {
+		if (((max == getRight() && max2 == getRearRight()) || (max2 == getRight() && max == getRearRight())) ||
+				((max == getRight() && max2 == getRightFront()) || (max2 == getRight() && max == getRightFront()))) {
 			System.out.println("Wall is on right side");
 			return true;
 		}
 		System.out.println("wall is NOT on right side - max sensors are " + max.getName() + " and " + max2.getName());
+		return false;
+	}
+
+	public boolean isBallInFront() {
+		Sensor max = null;
+		Sensor max2 = null;
+		for(Sensor s : sensors.values()) {
+			if(max == null) {
+				max = s;
+			} else if(max2 == null) {
+				max2 = s;
+			}			
+			if(s.getDistanceValue() > max.getDistanceValue()) {
+				max2 = max;
+				max = s;
+			} else if(max2 != null) {
+				if(s.getDistanceValue() > max2.getDistanceValue()) max2 = s;
+			}
+		}
+		if (((max == getFrontLeft() && max2 == getFrontRight()) || (max2 == getFrontRight() && max == getFrontLeft())) ) {
+			System.out.println("Ball is in front");
+			return true;
+		}
+		System.out.println("ball is NOT in front - max sensors are " + max.getName() + " and " + max2.getName());
 		return false;
 	}
 	
