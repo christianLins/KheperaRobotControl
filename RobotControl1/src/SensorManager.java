@@ -111,7 +111,7 @@ public class SensorManager {
 	 * the highest value is the darkest value in reality!
 	 * @return highest sensor value
 	 */
-	public Sensor getHighestLightValue() {
+	public Sensor getDarkestLightValue() {
 		Sensor max = null;
 		for(Sensor s : sensors.values()) {
 			if(max == null) max = s;
@@ -142,7 +142,7 @@ public class SensorManager {
 	 * the lowest value is the brightest value in reality!
 	 * @return lowest sensor value
 	 */
-	public Sensor getLowestLightValue() {
+	public Sensor getBrightestLightValue() {
 		Sensor min = null;
 		for(Sensor s : sensors.values()) {
 			if(min == null) min = s;
