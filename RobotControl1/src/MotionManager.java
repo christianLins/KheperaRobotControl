@@ -5,6 +5,7 @@ public class MotionManager {
 	
 	private RobotController ctrl;
 	private int baseSpeed = 5;
+	private static final int MAX_SPEED = 9; // 9 = robot max speed!!!
 	
 	public MotionManager(RobotController controller) {
 		this.ctrl = controller;
@@ -14,37 +15,47 @@ public class MotionManager {
 		this.baseSpeed = baseSpeed;
 	}
 	
-	public void setMotorSpeed(int left, int right) {
+	public void setMotorSpeeds(int left, int right) {
+		// check max speeds
+		if(left >= MAX_SPEED) {
+			System.out.println("left speed to high (" + left + ")");
+			left = MAX_SPEED;
+		}
+		if(right >= MAX_SPEED) {
+			System.out.println("right speed to high (" + right + ")");
+			right = MAX_SPEED;
+		}
 		ctrl.setMotorSpeeds(left, right);
+		System.out.println("Set motor speed to " + left + " | " + right);
 	}
 	
 	public void goForward() {
 		System.out.println("Go forward");
-		ctrl.setMotorSpeeds(baseSpeed, baseSpeed);
+		setMotorSpeeds(baseSpeed, baseSpeed);
 	}
 	
 	public void turnLeft() {
 		System.out.println("Turn left");
-		ctrl.setMotorSpeeds(-baseSpeed, baseSpeed);
+		setMotorSpeeds(-baseSpeed, baseSpeed);
 	}
 	
 	public void turnRight() {
 		System.out.println("Turn right");
-		ctrl.setMotorSpeeds(baseSpeed, -baseSpeed);
+		setMotorSpeeds(baseSpeed, -baseSpeed);
 	}
 	
 	public void goToLeft() {
 		System.out.println("Go left");
-		ctrl.setMotorSpeeds(0, baseSpeed);
+		setMotorSpeeds(0, baseSpeed);
 	}
 	
 	public void goToRight() {
 		System.out.println("Go right");
-		ctrl.setMotorSpeeds(baseSpeed, 0);
+		setMotorSpeeds(baseSpeed, 0);
 	}
 
 	public void stop() {
-		ctrl.setMotorSpeeds(0, 0);
+		setMotorSpeeds(0, 0);
 		
 	}
 
@@ -52,7 +63,7 @@ public class MotionManager {
 		int l = (int)((double)baseSpeed*left);
 		int r = (int)((double)baseSpeed*right);
 		System.out.println("Go in direction " + l + " | " + r + " (input = " + left + " | " + right + ")");
-		setMotorSpeed(l, r);		
+		setMotorSpeeds(l, r);		
 	}
 	
 	

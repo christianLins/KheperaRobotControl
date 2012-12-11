@@ -77,6 +77,10 @@ public class Sensor {
 		return 0 > getSideFactor();
 	}
 	
+	public boolean isRight() {
+		return 0 <= getSideFactor();
+	}
+	
 	
 
 	
