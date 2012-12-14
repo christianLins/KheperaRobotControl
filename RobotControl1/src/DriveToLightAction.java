@@ -1,9 +1,9 @@
 
-public class DriveTowardsLightAction extends Action {
+public class DriveToLightAction extends Action {
 
 	private int threshold;
 	
-	public DriveTowardsLightAction(ActionContext context) {
+	public DriveToLightAction(ActionContext context) {
 		super(context);
 		this.threshold = 92;
 	}

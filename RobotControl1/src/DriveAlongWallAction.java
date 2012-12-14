@@ -13,8 +13,6 @@ public class DriveAlongWallAction extends Action {
 
 	@Override
 	public void doAction() {
-		Sensor shortestDistanceValue = getSensorManager().getShortestDistanceValue();
-		
 		if(isToFarFromWall()) {
 			if(Direction.right.equals(wall)) {
 				getMotionManager().goToRight();

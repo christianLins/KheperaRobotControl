@@ -1,3 +1,4 @@
+
 import edu.wsu.KheperaSimulator.RobotController;
 
 
@@ -105,10 +106,6 @@ public class AvancedBangBangController extends RobotController {
 
 	public double getBaseSpeed() {
 		return baseSpeed;
-	}
-
-	private void setBaseSpeed(double baseSpeed) {
-		this.baseSpeed = baseSpeed;
 	}
 
 }
