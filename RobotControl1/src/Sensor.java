@@ -1,4 +1,9 @@
 
+/**
+ * abstraction of a robot sensor
+ * @author Chris
+ *
+ */
 public class Sensor {
 
 	private final int id;	

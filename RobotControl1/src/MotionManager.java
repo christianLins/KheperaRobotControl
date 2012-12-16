@@ -1,6 +1,12 @@
 import edu.wsu.KheperaSimulator.RobotController;
 
-
+/**
+ * this class provides (currently only necessary) actors of the robot
+ * and makes it easier to access or set for example the motor speeds (turn,...)
+ * 
+ * @author Chris
+ *
+ */
 public class MotionManager {
 	
 	private RobotController ctrl;

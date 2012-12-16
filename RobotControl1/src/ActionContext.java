@@ -1,5 +1,11 @@
 
-
+/**
+ * interface for the context object for all actions
+ * an implementation of this interface is for example the robot-controller
+ * 
+ * @author Chris
+ *
+ */
 public interface ActionContext {
 
 	public void setAction(Action action);

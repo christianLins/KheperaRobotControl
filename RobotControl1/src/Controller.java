@@ -3,10 +3,11 @@ import java.util.LinkedList;
 import edu.wsu.KheperaSimulator.RobotController;
 
 /**
- * update world map (recognized objects etc.)
- * check for collision
- * check if stuck (deadlock)
- * plan next action (find ball etc.)
+ * cyclic schedule:
+ * - update world map (recognized objects etc.)
+ * - check for collision
+ * - check if stuck (deadlock)
+ * - plan next action (find ball etc.)
  * 
  * @author Chris
  *
@@ -58,27 +59,20 @@ public abstract class Controller extends RobotController implements ActionContex
 		}
 	}
 
-	private void checkDeadlock() {
-		// TODO Auto-generated method stub
+	protected void checkDeadlock() {
+		// CURRENTLY NOT NEEDED
+		// overwrite this in the implementation or change code to pass deadlock-conditions,
+		// how we do it with the actions --> deadLockList
+		// or give to the actions deadLockConditions, because could be deadlock specific
 		
 	}
 
-	private void updateWorldMap() {
-		// TODO Auto-generated method stub
-		
+	protected void updateWorldMap() {
+		// CURRENTLY NOT NEEDED
 	}
 
 	private boolean checkStopConditions() {
-		// robot is close to light source
-//		Sensor maxDistanceValue = sensorMgr.getShortestDistanceValue();
-//		if(maxDistanceValue.getDistanceValue() > 800)
-//			try {
-//				System.out.println("Light source reached");
-//				return true;
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+		// CURRENTLY NOT NEEDED
 		return false;
 	}
 
@@ -86,7 +80,6 @@ public abstract class Controller extends RobotController implements ActionContex
 	@Override
 	public void close() throws Exception {
 		// TODO Auto-generated method stub
-
 	}
 
 	public double getBaseSpeed() {
@@ -94,21 +87,35 @@ public abstract class Controller extends RobotController implements ActionContex
 	}
 
 	
+	/**
+	 * set next (current) action
+	 */
 	@Override
 	public void setAction(Action action) {
 		this.currentAction = action;		
 	}
 
+	/**
+	 * returns the sensor manager
+	 */
 	@Override
 	public SensorManager getSensorManager() {
 		return sensorMgr;
 	}
 
+	/**
+	 * returns the motion manager
+	 */
 	@Override
 	public MotionManager getMotionManager() {
 		return motionMgr;
 	}
 
+	/**
+	 * calls next action
+	 * for future:
+	 * - add actions by a specific actions etc.
+	 */
 	@Override
 	public void actionDone(Action action) {
 		int indexOf = actions.indexOf(action);
@@ -119,9 +126,6 @@ public abstract class Controller extends RobotController implements ActionContex
 			System.out.println("No more actions available");
 			currentAction = null;
 		}
-		
-		
-		
 	}
 
 	

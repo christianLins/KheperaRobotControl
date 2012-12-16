@@ -1,16 +1,10 @@
 
-/**
- * stop in front of light
- * 
- * @author Chris
- *
- */
 public class DriveIntoLightProportionalAction extends Action {
 	
 	private static final int LIGHT_MAX = 600;
 	private float[][] controlMatrix = new float[][] { 
-			new float[] { 0.0f, 0.3f, 0.7f , 0f, 0f, 0f },
-			new float[] { 0, 0, 0, 0.7f, 0.3f, 0.0f } 
+			new float[] { 0.0f, 0.3f, 0.7f , 0f, 0f, 0f, 0f, 0f },
+			new float[] { 0, 0, 0, 0.7f, 0.3f, 0.0f, 0f, 0f } 
 			}; 
 	private float PROP_BASE_SPEED = 4;
 
@@ -23,7 +17,7 @@ public class DriveIntoLightProportionalAction extends Action {
 		float left = 0;
 		float right = 0;
 		
-		float[] sensors = getSensorManager().getSensorLightVectorFront();
+		float[] sensors = getSensorManager().getSensorLightVector();
 
 		for (int i = 0; i < sensors.length; i++) {
 			left += controlMatrix[0][i] * sensors[i];

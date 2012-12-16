@@ -33,7 +33,6 @@ public class DriveAlongWallAction extends Action {
 			} else {
 				wall = Direction.straight;
 			}
-			// check corner
 		}
 		
 	}

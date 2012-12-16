@@ -1,5 +1,12 @@
 
-
+/**
+ * implementations of this class should do a specific action
+ * if the action is done call <code>actionDone()<code> on the action-context
+ * the action-context is the controller of the robote
+ * 
+ * @author Chris
+ *
+ */
 public abstract class Action {
 	
 	private ActionContext context;

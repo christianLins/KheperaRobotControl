@@ -7,6 +7,11 @@ public class DriveToLightAction extends Action {
 		super(context);
 		this.threshold = 92;
 	}
+	
+	public DriveToLightAction(ActionContext context, int threshold) {
+		super(context);
+		this.threshold = threshold;
+	}
 
 	@Override
 	public void doAction() {
