@@ -9,7 +9,7 @@ public class GoToWallAction extends Action {
 	}
 
 	@Override
-	public void doAction() {
+	public void doRealAction() {
 		System.out.println("go to wall");
 		
 		if(!foundWall()) {

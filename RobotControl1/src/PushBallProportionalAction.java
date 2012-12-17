@@ -15,7 +15,7 @@ public class PushBallProportionalAction extends Action {
 	}
 	
 	@Override
-	public void doAction() {
+	public void doRealAction() {
 	     float left = 0;
 	     float right = 0;
 	     

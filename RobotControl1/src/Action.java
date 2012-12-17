@@ -1,3 +1,7 @@
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+
 
 /**
  * implementations of this class should do a specific action
@@ -10,13 +14,45 @@
 public abstract class Action {
 	
 	private ActionContext context;
+	
+	private Collection<StopCondition> stopConditions;
 
 	public Action(ActionContext context) {
 		this.context = context;
 	}
 	
-	public abstract void doAction();
+	public void setStopCondtions(Collection<StopCondition> stops) {
+		this.stopConditions = stops;
+	}
 	
+	public void setStopCondtion(StopCondition stop) {
+		this.stopConditions = new LinkedList<StopCondition>();
+		stopConditions.add(stop);
+	}
+	
+	protected abstract void doRealAction();
+	
+	public void doAction() {
+		if(hasToStop()) {
+			actionDone();
+		} else {
+			doRealAction();
+		}
+	}
+	
+	private boolean hasToStop() {
+		System.out.println("Check stop conditions");
+		if(stopConditions != null) {
+			for(StopCondition stop : stopConditions) {
+				if(stop.hasToStop()) return true;
+			}
+			return false;
+		} else {
+			return false;
+		}
+	
+	}
+
 	protected SensorManager getSensorManager() {
 		return context.getSensorManager();
 	}
@@ -28,4 +64,6 @@ public abstract class Action {
 	protected final void actionDone() {
 		context.actionDone(this);
 	}
+	
+	
 }

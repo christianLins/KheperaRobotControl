@@ -14,7 +14,7 @@ public class DriveAlongWallProportionalAction extends Action {
 	}
 
 	@Override
-	public void doAction() {
+	public void doRealAction() {
 		float left = 0;
 		float right = 0;
 		

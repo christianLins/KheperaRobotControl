@@ -12,7 +12,7 @@ public class DriveAlongWallAction extends Action {
 	}
 
 	@Override
-	public void doAction() {
+	public void doRealAction() {
 		if(isToFarFromWall()) {
 			if(Direction.right.equals(wall)) {
 				getMotionManager().goToRight();

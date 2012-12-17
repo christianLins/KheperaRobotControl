@@ -15,15 +15,20 @@ import edu.wsu.KheperaSimulator.RobotController;
  */
 public class SensorManager {
 
+	
+
 	/**
 	 * controller to access sensor values etc.
 	 */
-	private RobotController ctrl;
+	private Controller ctrl;
 		
 	private Map<String,Sensor> sensors;
 	private List<Sensor> sensorList;
+	
+	private static float BALL_COLOUR = 200f;
+	private static final float WALL_COLOUR = 10f;
 
-	public SensorManager(RobotController controller) {
+	public SensorManager(Controller controller) {
 		this.ctrl = controller;
 		init();
 	}
@@ -270,7 +275,7 @@ public class SensorManager {
 		return false;
 	}
 
-	public boolean isBallInFront() {
+	public boolean isObjectInFront() {
 		Sensor max = null;
 		Sensor max2 = null;
 		for(Sensor s : sensors.values()) {
@@ -287,11 +292,48 @@ public class SensorManager {
 			}
 		}
 		if (((max == getFrontLeft() && max2 == getFrontRight()) || (max2 == getFrontRight() && max == getFrontLeft())) ) {
-			System.out.println("Ball is in front");
+//			System.out.println("Object is in front");
 			return true;
 		}
-		System.out.println("ball is NOT in front - max sensors are " + max.getName() + " and " + max2.getName());
+//		System.out.println("Object is NOT in front - max sensors are " + max.getName() + " and " + max2.getName());
 		return false;
 	}
+
+	public float[] getLvtImage() {
+		return ctrl.readLvtImage();
+	}
+	
+	public boolean isBallInFront() {		
+		float[] lvtImage = getLvtImage();
+		int threshold = 5;
+		int count = 0;
+		
+		for (int i = 0; i < lvtImage.length; i++) {
+			if(lvtImage[i] == BALL_COLOUR) {
+				System.out.println("is ball in front? count = " + count);
+				if(count++ >= threshold) {
+					if(isObjectInFront()) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean isWallInFront() {		
+		float[] lvtImage = getLvtImage();
+		int THRESHOLD = 200;
+		
+		for (int i = 0; i < lvtImage.length; i++) {
+			if(lvtImage[i] == WALL_COLOUR) {
+				if(THRESHOLD < getShortestDistanceValue().getDistanceValue()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	
 }

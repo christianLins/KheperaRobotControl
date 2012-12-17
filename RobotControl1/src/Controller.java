@@ -14,13 +14,23 @@ import edu.wsu.KheperaSimulator.RobotController;
  */
 public abstract class Controller extends RobotController implements ActionContext {
 	
+//	public Controller(String serialPort, long waitTime) {
+//		super(serialPort, waitTime);
+//	}
+	
+//	public Controller() {
+//		this("COM3", 50);
+//	}
+
 	private SensorManager sensorMgr;
 	private MotionManager motionMgr;
 	
-	private int baseSpeed = 5;
+	private int baseSpeed = 9;
 	
 	private Action currentAction;
 	private LinkedList<Action> actions;
+	
+	private boolean repeate = false;
 	
 	
 	protected void init(LinkedList<Action> actions) {
@@ -34,7 +44,6 @@ public abstract class Controller extends RobotController implements ActionContex
 		} else {
 			System.out.println("No actions available");
 		}
-		
 	}
 
 
@@ -47,7 +56,7 @@ public abstract class Controller extends RobotController implements ActionContex
 	 * - and write the outputs to robot
 	 */
 	@Override
-	public void doWork() throws Exception {
+	public void doWork() {
 		sensorMgr.update();
 		updateWorldMap();
 		if(checkStopConditions()) {
@@ -123,9 +132,22 @@ public abstract class Controller extends RobotController implements ActionContex
 			System.out.println("Switch to next action");
 			currentAction = actions.get(indexOf+1);
 		} else {
-			System.out.println("No more actions available");
-			currentAction = null;
+			if(isRepeate()) {
+				indexOf = 0;
+				currentAction = actions.get(indexOf);
+			} else {
+				System.out.println("No more actions available");
+				currentAction = null;
+			}
 		}
+	}
+	
+	public void setRepeate(boolean b) {
+		this.repeate = b;
+	}
+	
+	public boolean isRepeate() {
+		return repeate;
 	}
 
 	

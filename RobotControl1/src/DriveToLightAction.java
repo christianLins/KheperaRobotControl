@@ -14,7 +14,7 @@ public class DriveToLightAction extends Action {
 	}
 
 	@Override
-	public void doAction() {
+	public void doRealAction() {
 		Sensor brightestLightValue = getSensorManager().getBrightestLightValue();
 		
 		if(!foundLight()){

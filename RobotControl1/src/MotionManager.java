@@ -9,11 +9,11 @@ import edu.wsu.KheperaSimulator.RobotController;
  */
 public class MotionManager {
 	
-	private RobotController ctrl;
+	private Controller ctrl;
 	private int baseSpeed = 5;
 	private static final int MAX_SPEED = 9; // 9 = robot max speed!!!
 	
-	public MotionManager(RobotController controller) {
+	public MotionManager(Controller controller) {
 		this.ctrl = controller;
 	}
 	
