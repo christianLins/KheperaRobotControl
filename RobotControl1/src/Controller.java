@@ -60,8 +60,9 @@ public abstract class Controller extends RobotController implements ActionContex
 		sensorMgr.update();
 		updateWorldMap();
 		if(checkStopConditions()) {
-			setWaitTime(2000);
-			motionMgr.stop();
+//			setWaitTime(2000);
+//			motionMgr.stop();
+			actionDone(currentAction);
 		} else {
 			checkDeadlock();
 			if(currentAction != null) currentAction.doAction();

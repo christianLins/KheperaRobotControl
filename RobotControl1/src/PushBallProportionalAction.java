@@ -3,8 +3,8 @@
 public class PushBallProportionalAction extends Action {
 
 	private float[][] controlMatrix = new float[][] { 
-            new float[] {-0.5f, -0.5f, -0.0f, 0.3f, 0.30f, 0.40f, -0.50f, 0.50f  },     //left 
-            new float[] { 0.40f, 0.30f, 0.30f, -0.0f, -0.5f, -0.5f, 0.50f, -0.50f   }      //right
+            new float[] {-0.0f, -0.0f, -0.0f, 0.2f, 0.35f, 0.45f, -0.00f, 0.50f  },     //left 
+            new float[] { 0.45f, 0.35f, 0.20f, -0.0f, -0.0f, -0.0f, 0.50f, -0.00f   }      //right
             }; 
 
 	private static final int MAX_DISTANCE = 1023;
@@ -29,8 +29,9 @@ public class PushBallProportionalAction extends Action {
 	     left = left / MAX_DISTANCE;
 	     right = right / MAX_DISTANCE;
 	     
-	     getMotionManager().setMotorSpeeds((int)(PROP_BASE_SPEED * 0 + (left) * PROP_BASE_SPEED), (int)(PROP_BASE_SPEED * 0 + (right)* PROP_BASE_SPEED));
+	     getMotionManager().setMotorSpeeds((int)(2 + (left) * PROP_BASE_SPEED), (int)(2 + (right)* PROP_BASE_SPEED));
 	
+	     System.out.println("Push Ball Proportional Action");
 	
 	}
 

@@ -41,7 +41,7 @@ public abstract class Action {
 	}
 	
 	private boolean hasToStop() {
-		System.out.println("Check stop conditions");
+//		System.out.println("Check stop conditions");
 		if(stopConditions != null) {
 			for(StopCondition stop : stopConditions) {
 				if(stop.hasToStop()) return true;

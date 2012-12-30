@@ -303,37 +303,88 @@ public class SensorManager {
 		return ctrl.readLvtImage();
 	}
 	
-	public boolean isBallInFront() {		
+	public float[] getLvtBallVector() {
 		float[] lvtImage = getLvtImage();
-		int threshold = 5;
-		int count = 0;
+		float[] ret = new float[lvtImage.length];
 		
 		for (int i = 0; i < lvtImage.length; i++) {
-			if(lvtImage[i] == BALL_COLOUR) {
-				System.out.println("is ball in front? count = " + count);
-				if(count++ >= threshold) {
-					if(isObjectInFront()) {
-						return true;
-					}
-				}
+			if(lvtImage[i] == ObjectColours.Ball.getValue()) {
+				ret[i] = 1;
+			} else {
+				ret[i] = 0;
 			}
 		}
-		return false;
+		return ret;
+	}
+	
+	public float[] getLvtWallVector() {
+		float[] lvtImage = getLvtImage();
+		float[] ret = new float[lvtImage.length];
+		
+		for (int i = 0; i < lvtImage.length; i++) {
+			if(lvtImage[i] == ObjectColours.Wall.getValue()) {
+				ret[i] = 1;
+			} else {
+				ret[i] = 0;
+			}
+		}
+		return ret;
+	}
+	
+	public boolean isBallInFront() {		
+		float[] lvtImage = getLvtImage();
+		
+		int count = 0;
+
+		for (int i = 0; i < lvtImage.length; i++) {
+			if(lvtImage[i] != ObjectColours.Ball.getValue()) {
+				count++;
+				if(count >= 35) return false;
+			}
+		}
+		return true;
 	}
 	
 	public boolean isWallInFront() {		
 		float[] lvtImage = getLvtImage();
-		int THRESHOLD = 200;
+		int THRESHOLD = 50;
+		boolean isWall = true;
 		
 		for (int i = 0; i < lvtImage.length; i++) {
-			if(lvtImage[i] == WALL_COLOUR) {
-				if(THRESHOLD < getShortestDistanceValue().getDistanceValue()) {
-					return true;
-				}
+			if(lvtImage[i] != ObjectColours.Wall.getValue()) {
+				isWall = false;
+			}
+		}
+		if(isWall) {
+			if(THRESHOLD < getLeftFront().getDistanceValue() && THRESHOLD < getRightFront().getDistanceValue()) {
+				return true;
 			}
 		}
 		return false;
 	}
+
+	public boolean isObjectInBack() {
+		int THRESHOLD = 100;
+		if(THRESHOLD < getRearLeft().getDistanceValue() && THRESHOLD < getRearRight().getDistanceValue()) {
+			return true;
+		}
+		return false;
+	}
 	
+	
+}
+
+enum ObjectColours {
+	Ball(200f),
+	Wall(10f);
+	
+	private final float colour;
+	  
+    ObjectColours(float colour) {
+    	this.colour = colour; 
+	}
+    public float getValue() { 
+    	return colour; 
+	}
 	
 }

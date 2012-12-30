@@ -71,8 +71,11 @@ public class MotionManager {
 		System.out.println("Go in direction " + l + " | " + r + " (input = " + left + " | " + right + ")");
 		setMotorSpeeds(l, r);		
 	}
-	
-	
-	
+
+	public void driveBack() {
+		setMotorSpeeds(-baseSpeed, -baseSpeed);		
+	}
+
+		
 
 }
