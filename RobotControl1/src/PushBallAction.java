@@ -32,7 +32,7 @@ public class PushBallAction extends Action {
 	}
 
 	private boolean isBallWellPositioned() {
-		return getSensorManager().isObjectInFront();
+		return getSensorManager().isObjectInFrontOld();
 	}
 
 }

@@ -4,13 +4,13 @@
  * @author Chris
  *
  */
-public class Sensor {
+public class Sensor implements Cloneable {
 
 	private final int id;	
 	private String name;
 	
-	private int valueLight = 1000;
-	private int valueDistance = 1000;
+	private int valueLight = SensorManager.getLIGHT_MAX();
+	private int valueDistance = SensorManager.getDISTANCE_MAX();
 	private double sideFactor = 1;
 	private boolean front = true;
 	
@@ -85,8 +85,44 @@ public class Sensor {
 	public boolean isRight() {
 		return 0 <= getSideFactor();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Sensor other = (Sensor) obj;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
 	
 	
+	public Sensor clone() {
+		Sensor s = new Sensor(getId(), getName());
+		s.setFront(front);
+		s.setLightValue(getLightValue());
+		s.setSideFactor(getSideFactor());
+		s.setValueDistance(valueDistance);
+		return s;
+	}
 
 	
 	

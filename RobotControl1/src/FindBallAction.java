@@ -35,7 +35,10 @@ public class FindBallAction extends Action {
 	private float PROP_BASE_SPEED = 9;
 	private int BASE_SPEED_TERM = 1;
 	
-	private int deadlockMode = 0;
+	
+	float left = 0;
+    float right = 0;
+
 	
 
 	public FindBallAction(ActionContext context) {
@@ -44,24 +47,16 @@ public class FindBallAction extends Action {
 
 	@Override
 	public void doRealAction() {
-		try{
-		
-		if(deadlockMode != 0) {
-			doDeadLockAction();
-			return;
-		}
+		try{	
 			
 		float[] lvtBallVector = getSensorManager().getLvtBallVector();
 		
-//		System.out.println("ball vector length = " + lvtBallVector.length + "\n" + lvtBallVector);
 		
-		float left = 0;
-	    float right = 0;
+		left = 0;
+	    right = 0;
 	     
 	    boolean findBall = false;
 	    
-	     
-	     
 	     for (int i = 0; i < lvtBallVector.length; i++) {
 	    	 boolean visibleBall = (lvtBallVector[i] == 1);
 	    	 if(findBall && visibleBall) {
@@ -76,19 +71,17 @@ public class FindBallAction extends Action {
 	    		 // go on (nothing found)
 	    	 }
 	    	 
-	            left += controlMatrix[0][i] * lvtBallVector[i];
-	            right += controlMatrix[1][i] * lvtBallVector[i];
+            left += controlMatrix[0][i] * lvtBallVector[i];
+            right += controlMatrix[1][i] * lvtBallVector[i];
 	     }
 	     
-//	     System.out.println("left = " + left + "; right = " + right);
 	     System.out.println("Find Ball Action");
 	     
 	     if(!findBall) {
 	    	 // try something different or stop
-	    	 
 	    	 System.out.println("DEAD LOCK");
-	    	 deadlockMode = 1;
-	    	 doDeadLockAction();
+	    	 setDeadlock(true);
+	    	 
 	     } else if(getSensorManager().isBallInFront()) {
 	    	 actionDone();
 	     } else {
@@ -107,23 +100,7 @@ public class FindBallAction extends Action {
 		}
 
 	}
-
-	private void doDeadLockAction() {
-		if(deadlockMode == 1) {
-	   		getMotionManager().driveBack();
-   			nextDeadLockMode();
-	   	 } else if(deadlockMode == 2) {
-	   		 getMotionManager().turnLeft();
-	   		 if (getSensorManager().isObjectInBack()) {
-	   			 nextDeadLockMode();
-	   		 }
-	   	 }
-		System.out.println("Deadlockmode = " + deadlockMode);
-	}
-
-	private void nextDeadLockMode() {
-		deadlockMode = (deadlockMode + 1) % 3;		
-	}
-
+	
+	
 
 }

@@ -8,7 +8,11 @@ public class WallStopCondition extends StopCondition {
 
 	@Override
 	public boolean hasToStop() {
-		return getSensorManager().isWallInFront();
+		if (getSensorManager().isWallInFront()) {
+			System.out.println("pushed ball to wall");
+			return true;
+		}
+		return false;
 	}
 
 }

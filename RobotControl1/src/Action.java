@@ -16,6 +16,8 @@ public abstract class Action {
 	private ActionContext context;
 	
 	private Collection<StopCondition> stopConditions;
+	
+	private boolean isDeadLock = false;
 
 	public Action(ActionContext context) {
 		this.context = context;
@@ -53,11 +55,11 @@ public abstract class Action {
 	
 	}
 
-	protected SensorManager getSensorManager() {
+	public SensorManager getSensorManager() {
 		return context.getSensorManager();
 	}
 	
-	protected MotionManager getMotionManager() {
+	public MotionManager getMotionManager() {
 		return context.getMotionManager();
 	}
 	
@@ -65,5 +67,17 @@ public abstract class Action {
 		context.actionDone(this);
 	}
 	
+	public boolean isDeadLock() {
+		return isDeadLock;
+	}
+	
+	protected void setDeadlock(boolean b) {
+		isDeadLock = b;
+	}
+
+	public void deadLockResolved() {
+		isDeadLock = false;
+		
+	}
 	
 }

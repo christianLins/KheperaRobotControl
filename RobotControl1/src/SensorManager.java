@@ -17,16 +17,24 @@ public class SensorManager {
 
 	
 
+	private static final int LVT_MAX = 500; // do not know exact value????
+
 	/**
 	 * controller to access sensor values etc.
 	 */
 	private Controller ctrl;
 		
 	private Map<String,Sensor> sensors;
+	private Map<String,Sensor> sensorsOldValues;
 	private List<Sensor> sensorList;
 	
-	private static float BALL_COLOUR = 200f;
-	private static final float WALL_COLOUR = 10f;
+	private float[] lvtImageOld;
+
+	private float[] lvtImage;
+	
+	private static int DISTANCE_MAX = 1023;
+	private static int LIGHT_MAX = 510;
+	
 
 	public SensorManager(Controller controller) {
 		this.ctrl = controller;
@@ -41,6 +49,7 @@ public class SensorManager {
 		
 		sensors = new HashMap<String, Sensor>();
 		sensorList = new LinkedList<Sensor>();
+		sensorsOldValues = new HashMap<String,Sensor>();
 		
 		
 		Sensor left = new Sensor(0, "left");
@@ -170,15 +179,18 @@ public class SensorManager {
 	/**
 	 * update all sensor values
 	 */
-	public void update() {
+	public synchronized void update() {
+		lvtImageOld  = lvtImage;
+		lvtImage = ctrl.readLvtImage();
+		
 		for(Sensor s : sensors.values()) {
+			sensorsOldValues.put(s.getName(), s.clone());
 			int lightValue = 0;
 			try {
 				lightValue = ctrl.getLightValue(s.getId());
 				s.setLightValue(lightValue);
 				int distanceValue = ctrl.getDistanceValue(s.getId());
 				s.setValueDistance(distanceValue);
-//				System.out.println("Updated sensor " + s.getName() + " to light value" + s.getLightValue() + " and to dist value " + s.getDistanceValue());
 			} catch(Exception e) {
 				System.out.println("Problems during sensor updating " + s.getId());
 			}
@@ -275,7 +287,14 @@ public class SensorManager {
 		return false;
 	}
 
+	
 	public boolean isObjectInFront() {
+		int threshold = 200;
+		return getFrontLeft().getDistanceValue() >= threshold && getFrontRight().getDistanceValue() >= threshold;
+	}
+	
+	@Deprecated
+	public boolean isObjectInFrontOld() {
 		Sensor max = null;
 		Sensor max2 = null;
 		for(Sensor s : sensors.values()) {
@@ -300,7 +319,7 @@ public class SensorManager {
 	}
 
 	public float[] getLvtImage() {
-		return ctrl.readLvtImage();
+		return lvtImage;
 	}
 	
 	public float[] getLvtBallVector() {
@@ -339,7 +358,7 @@ public class SensorManager {
 		for (int i = 0; i < lvtImage.length; i++) {
 			if(lvtImage[i] != ObjectColours.Ball.getValue()) {
 				count++;
-				if(count >= 35) return false;
+				if(count >= 42) return false;
 			}
 		}
 		return true;
@@ -356,7 +375,9 @@ public class SensorManager {
 			}
 		}
 		if(isWall) {
-			if(THRESHOLD < getLeftFront().getDistanceValue() && THRESHOLD < getRightFront().getDistanceValue()) {
+			if(THRESHOLD < getLeftFront().getDistanceValue() && THRESHOLD < getRightFront().getDistanceValue()
+					|| THRESHOLD < getLeftFront().getDistanceValue() && THRESHOLD < getFrontLeft().getDistanceValue() 
+					|| THRESHOLD < getRightFront().getDistanceValue() && THRESHOLD < getFrontRight().getDistanceValue()) {
 				return true;
 			}
 		}
@@ -370,6 +391,69 @@ public class SensorManager {
 		}
 		return false;
 	}
+	
+	/**
+	 * 
+	 * @param percentage of min change
+	 * @return
+	 */
+	public boolean isAnyChange(float percentage) {
+		if(sensorList == null) return false;
+		
+		for(Sensor s : sensorList) {
+			// distance
+			int currentDistance = s.getDistanceValue();
+			Sensor oldSensor = sensorsOldValues.get(s.getName());
+			if(oldSensor != null) {
+				int oldDistance = oldSensor.getDistanceValue();
+				if(currentDistance >= oldDistance + getDistanceTolerance(percentage) || currentDistance <= oldDistance - getDistanceTolerance(percentage)) {
+					// "new" value for distance
+					return true;
+				} else {
+					int currentLight = s.getLightValue();
+					int oldLight = oldSensor.getLightValue();
+					if(currentLight >= oldLight + getLightTolerance(percentage) || currentLight <= oldLight - getLightTolerance(percentage)) {
+						// "new" value for light
+						return true;
+					} else {
+						if(lvtImage != null && lvtImageOld != null) {
+							for (int i = 0; i < lvtImage.length; i++) {
+								if(lvtImage[i] <= lvtImageOld[i] - getLvtTolerance(percentage) || lvtImage[i] >= lvtImageOld[i] + getLvtTolerance(percentage)) {
+									return true;
+								}
+							}
+						}
+						return false;
+					}
+				}
+			} else  {
+				return true;
+			}
+		}
+		return true;
+	}
+
+	private float getLvtTolerance(float percentage) {
+		return (LVT_MAX / 100) * percentage;
+	}
+
+	public static int getDISTANCE_MAX() {
+		return DISTANCE_MAX;
+	}
+
+
+	public static int getLIGHT_MAX() {
+		return LIGHT_MAX;
+	}
+	
+	private float getLightTolerance(float percentage) {
+		return (LIGHT_MAX / 100) * percentage;
+	}
+	
+	private float getDistanceTolerance(float percentage) {
+		return (DISTANCE_MAX / 100) * percentage;
+	}
+
 	
 	
 }

@@ -13,6 +13,12 @@ public class MotionManager {
 	private int baseSpeed = 5;
 	private static final int MAX_SPEED = 9; // 9 = robot max speed!!!
 	
+	float oldLeft = 0;
+	float oldRight = 0;
+	
+	float currentLeft = 0;
+    float currentRight = 0;
+	
 	public MotionManager(Controller controller) {
 		this.ctrl = controller;
 	}
@@ -21,7 +27,12 @@ public class MotionManager {
 		this.baseSpeed = baseSpeed;
 	}
 	
-	public void setMotorSpeeds(int left, int right) {
+	public synchronized void setMotorSpeeds(int left, int right) {
+		
+		// set old speeds
+		oldLeft = currentLeft;
+		oldRight = currentRight;
+		
 		// check max speeds
 		if(left >= MAX_SPEED) {
 			System.out.println("left speed to high (" + left + ")");
@@ -31,7 +42,14 @@ public class MotionManager {
 			System.out.println("right speed to high (" + right + ")");
 			right = MAX_SPEED;
 		}
+		
+		// write speeds to robot
 		ctrl.setMotorSpeeds(left, right);
+		
+		// update speeds
+		currentLeft = left;
+		currentRight = right;
+		
 		System.out.println("Set motor speed to " + left + " | " + right);
 	}
 	
@@ -76,6 +94,10 @@ public class MotionManager {
 		setMotorSpeeds(-baseSpeed, -baseSpeed);		
 	}
 
+	
+	public boolean noMotionChange() {
+		return oldLeft == currentLeft && oldRight == currentRight;
+	}
 		
 
 }

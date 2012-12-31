@@ -32,6 +32,13 @@ public abstract class Controller extends RobotController implements ActionContex
 	
 	private boolean repeate = false;
 	
+	// deadLock
+	private int noMotionCounter = 0;
+	private int maxNoMotion = 50;
+	private DeadLockAction deadLockAction;
+	private int noInputChangeCounter = 0;
+	private int maxNoInputChange = 50;
+	
 	
 	protected void init(LinkedList<Action> actions) {
 		this.actions = actions;		
@@ -64,18 +71,50 @@ public abstract class Controller extends RobotController implements ActionContex
 //			motionMgr.stop();
 			actionDone(currentAction);
 		} else {
-			checkDeadlock();
-			if(currentAction != null) currentAction.doAction();
+			if(isDeadLock()) {
+				if(deadLockAction == null) {
+					deadLockAction = new DeadLockAction(this);
+				}
+				deadLockAction.doAction();
+			} else {	
+				if(currentAction != null) {
+					currentAction.deadLockResolved();
+					currentAction.doAction();
+				}
+			}
+			
 		}
 	}
 
-	protected void checkDeadlock() {
+	protected boolean isDeadLock() {
+		if(currentAction.isDeadLock()) {
+			return true;
+		}
+		if(getMotionManager().noMotionChange()) {
+			if(noMotionCounter++ > maxNoMotion) {
+				System.out.println("no motion");
+				return true;
+			}
+		} else if(!getSensorManager().isAnyChange(0.4f)) {
+			// no input value change
+			if(noInputChangeCounter++ > maxNoInputChange) {
+				System.out.println("no input value changed");
+				return true;
+			}
+		} else {
+			noMotionCounter = 0; // reset
+			deadLockAction = null;
+		}
+		return false;
+		
 		// CURRENTLY NOT NEEDED
 		// overwrite this in the implementation or change code to pass deadlock-conditions,
 		// how we do it with the actions --> deadLockList
 		// or give to the actions deadLockConditions, because could be deadlock specific
 		
 	}
+	
+	
 
 	protected void updateWorldMap() {
 		// CURRENTLY NOT NEEDED
@@ -128,6 +167,11 @@ public abstract class Controller extends RobotController implements ActionContex
 	 */
 	@Override
 	public void actionDone(Action action) {
+		if(action instanceof DeadLockAction) {
+			currentAction.deadLockResolved();
+			return;
+		}
+		
 		int indexOf = actions.indexOf(action);
 		if(indexOf+1  < actions.size()) {
 			System.out.println("Switch to next action");
