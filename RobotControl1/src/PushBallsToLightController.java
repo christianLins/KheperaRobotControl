@@ -2,9 +2,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 
-public class PushBallsToWallController extends Controller {
+public class PushBallsToLightController extends Controller {
 	
-	public PushBallsToWallController() {
+	public PushBallsToLightController() {
 		// action list
 		LinkedList<Action> actions = new LinkedList<>();
 		
@@ -12,10 +12,10 @@ public class PushBallsToWallController extends Controller {
 		actions.add(new FindBallAction(this));
 		
 		// push ball action
-		PushBallProportionalAction pushBallAction = new PushBallProportionalAction(this);		
+		Action pushBallAction = new DriveToLightAction(this);		
 		Collection<StopCondition> pushBallStops = new LinkedList<>();
 		pushBallStops.add(new WallStopCondition(this));
-		pushBallStops.add(new LostBallStopCondition(this, 170));
+		pushBallStops.add(new LostBallStopCondition(this, 200));
 		pushBallAction.setStopCondtions(pushBallStops);
 		actions.add(pushBallAction);
 		

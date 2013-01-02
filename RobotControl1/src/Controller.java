@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.List;
 
 import edu.wsu.KheperaSimulator.RobotController;
 
@@ -29,15 +30,19 @@ public abstract class Controller extends RobotController implements ActionContex
 	
 	private Action currentAction;
 	private LinkedList<Action> actions;
+	private Action temporaryAction;
+	private List<Action> temporaryActions = new LinkedList<>();
 	
 	private boolean repeate = false;
 	
 	// deadLock
 	private int noMotionCounter = 0;
-	private int maxNoMotion = 50;
-	private DeadLockAction deadLockAction;
+	private int maxNoMotionChange = 200;
+	private DeadLockAction deadLockAction = new DeadLockAction(this);
 	private int noInputChangeCounter = 0;
-	private int maxNoInputChange = 50;
+	private int maxNoInputChange = 150;
+	
+	
 	
 	
 	protected void init(LinkedList<Action> actions) {
@@ -71,27 +76,48 @@ public abstract class Controller extends RobotController implements ActionContex
 //			motionMgr.stop();
 			actionDone(currentAction);
 		} else {
+			if(temporaryAction instanceof DeadLockAction) {
+				temporaryAction.doAction();
+				return;
+			}
 			if(isDeadLock()) {
 				if(deadLockAction == null) {
 					deadLockAction = new DeadLockAction(this);
 				}
-				deadLockAction.doAction();
-			} else {	
-				if(currentAction != null) {
-					currentAction.deadLockResolved();
-					currentAction.doAction();
-				}
+				addTemporarySubAction(deadLockAction);
+			} else {
+				
+			}
+			if(temporaryAction != null) {
+				if(!(temporaryAction instanceof DeadLockAction)) {
+					temporaryAction.deadLockResolved();
+				}					
+				System.out.println(temporaryAction.getName());
+				temporaryAction.doAction();
+				return;
+			} else if(currentAction != null) {
+				currentAction.deadLockResolved();
+				System.out.println(currentAction.getName());
+				currentAction.doAction();
 			}
 			
 		}
 	}
 
+
+
+
 	protected boolean isDeadLock() {
+		if(temporaryAction != null) {
+			if(temporaryAction.isDeadLock()) {
+				return true;
+			}
+		}
 		if(currentAction.isDeadLock()) {
 			return true;
 		}
 		if(getMotionManager().noMotionChange()) {
-			if(noMotionCounter++ > maxNoMotion) {
+			if(noMotionCounter++ > maxNoMotionChange) {
 				System.out.println("no motion");
 				return true;
 			}
@@ -117,6 +143,7 @@ public abstract class Controller extends RobotController implements ActionContex
 	
 
 	protected void updateWorldMap() {
+		
 		// CURRENTLY NOT NEEDED
 	}
 
@@ -169,7 +196,19 @@ public abstract class Controller extends RobotController implements ActionContex
 	public void actionDone(Action action) {
 		if(action instanceof DeadLockAction) {
 			currentAction.deadLockResolved();
-			return;
+		} 
+		if(action == temporaryAction) {			
+			temporaryActions.remove(action);
+			if(temporaryActions.size() > 0) {
+				// more actions - take last (lifo)
+				temporaryAction = temporaryActions.get(temporaryActions.size() - 1);
+				return;
+			} else {
+				System.out.println("No more temporary action");
+				temporaryAction = null;
+				return;
+			}
+			
 		}
 		
 		int indexOf = actions.indexOf(action);
@@ -184,6 +223,15 @@ public abstract class Controller extends RobotController implements ActionContex
 				System.out.println("No more actions available");
 				currentAction = null;
 			}
+		}
+	}
+	
+	public void addTemporarySubAction(Action action) {
+		if(temporaryActions != null && action != null) {
+			// add to buffer
+			temporaryActions.add(action);
+			temporaryAction = action;
+			System.out.println("latest temporary action is " + temporaryAction.getName());
 		}
 	}
 	

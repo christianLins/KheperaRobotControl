@@ -16,4 +16,6 @@ public interface ActionContext {
 	
 	public MotionManager getMotionManager();
 	
+	public void addTemporarySubAction(Action action);
+	
 }

@@ -23,18 +23,22 @@ public class DeadLockAction extends Action {
 		if(deadlockMode == 0) {
 	   		getMotionManager().driveBack();
    			nextDeadLockMode();
+   			return;
 	   	 } else if(deadlockMode == 1) {
 	   		 getMotionManager().turnLeft();
 	   		 nextDeadLockMode();
-	   		 if (getSensorManager().isObjectInBack()) {
-	   			 nextDeadLockMode();
-	   		 }
+	   		 return;
+//	   		 if (getSensorManager().isObjectInBack()) {
+//	   			 nextDeadLockMode();
+//	   		 }
 	   	 } else if(deadlockMode == 2) {
 	   		 getMotionManager().goForward();
-	   		
+	   		 nextDeadLockMode();
+	   		 return;
 	   	 } else if(deadlockMode == 3) {
 	   		 getMotionManager().turnRight();
 	   		 nextDeadLockMode();
+	   		 return;
 //	   		 if (getSensorManager().isObjectInBack()) {
 //	   			 nextDeadLockMode();
 //	   		 }
@@ -54,6 +58,11 @@ public class DeadLockAction extends Action {
 	public void forceNextMethod() {
 		deadLockActionCounter = 0;
 		deadlockMode = (deadlockMode + 1) % METHOD_COUNT;	
+	}
+	
+	@Override
+	public String getName() {
+		return "Dead Lock Action";
 	}
 	
 }

@@ -1,7 +1,6 @@
 
 public class DriveToLightProportionalAction extends Action {
 	
-	private static final int LIGHT_MAX = 600;
 	private float[][] controlMatrix = new float[][] { 
 			new float[] { 0.0f, 0.1f, 0.9f , 0f, 0f, 0f, 0f, 0f },
 			new float[] { 0, 0, 0, 0.9f, 0.1f, 0.0f, 0f, 0f } 
@@ -24,8 +23,8 @@ public class DriveToLightProportionalAction extends Action {
 			right += controlMatrix[1][i] * sensors[i];
 		}
 
-		left = left / LIGHT_MAX;
-		right = right / LIGHT_MAX;
+		left = left / SensorManager.getLIGHT_MAX();
+		right = right / SensorManager.getLIGHT_MAX();
 		
 		getMotionManager().setMotorSpeeds((int)(PROP_BASE_SPEED * 0 + (left) * PROP_BASE_SPEED), (int)(PROP_BASE_SPEED * 0 + (right)* PROP_BASE_SPEED));
 		

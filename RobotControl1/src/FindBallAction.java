@@ -75,13 +75,11 @@ public class FindBallAction extends Action {
             right += controlMatrix[1][i] * lvtBallVector[i];
 	     }
 	     
-	     System.out.println("Find Ball Action");
-	     
 	     if(!findBall) {
 	    	 // try something different or stop
 	    	 System.out.println("DEAD LOCK");
 	    	 setDeadlock(true);
-	    	 
+	    	 return;
 	     } else if(getSensorManager().isBallInFront()) {
 	    	 actionDone();
 	     } else {

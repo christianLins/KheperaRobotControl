@@ -35,4 +35,9 @@ public class PushBallAction extends Action {
 		return getSensorManager().isObjectInFrontOld();
 	}
 
+	
+	@Override
+	public String getName() {
+		return this.getClass().getName();
+	}
 }

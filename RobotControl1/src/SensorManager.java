@@ -17,7 +17,7 @@ public class SensorManager {
 
 	
 
-	private static final int LVT_MAX = 500; // do not know exact value????
+	private static final int LVT_MAX = 255; // do not know exact value????
 
 	/**
 	 * controller to access sensor values etc.
@@ -288,8 +288,9 @@ public class SensorManager {
 	}
 
 	
-	public boolean isObjectInFront() {
-		int threshold = 200;
+	
+	
+	public boolean isObjectInFront(int threshold) {
 		return getFrontLeft().getDistanceValue() >= threshold && getFrontRight().getDistanceValue() >= threshold;
 	}
 	
@@ -454,13 +455,57 @@ public class SensorManager {
 		return (DISTANCE_MAX / 100) * percentage;
 	}
 
+	public boolean inFrontOfLight() {
+		int threshold = 50;
+		int counter = 0;
+		float[] lvtLightVector = getLvtLightVector();
+		for (int i = 0; i < lvtLightVector.length; i++) {
+			if(lvtLightVector[i] == 1) {
+				if(++counter >= threshold) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public float[] getLvtLightVector() {
+		float[] lvtImage = getLvtImage();
+		float[] ret = new float[lvtImage.length];
+		
+		for (int i = 0; i < lvtImage.length; i++) {
+			if(lvtImage[i] == ObjectColours.Light.getValue()) {
+				ret[i] = 1;
+			} else {
+				ret[i] = 0;
+			}
+		}
+		return ret;
+		
+	}
+
+	public boolean isLightInFront(int occourences) {
+		float[] lvtImage = getLvtLightVector();
+		
+		int count = 0;
+
+		for (int i = 0; i < lvtImage.length; i++) {
+			if(lvtImage[i] == 1) {
+				count++;
+				if(count >= occourences) return true;
+			}
+		}
+		return false;
+	}
+
 	
 	
 }
 
 enum ObjectColours {
 	Ball(200f),
-	Wall(10f);
+	Wall(10f),
+	Light(255);
 	
 	private final float colour;
 	  

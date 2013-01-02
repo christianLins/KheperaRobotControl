@@ -23,6 +23,10 @@ public abstract class Action {
 		this.context = context;
 	}
 	
+	protected ActionContext getActionContect() {
+		return context;
+	}
+	
 	public void setStopCondtions(Collection<StopCondition> stops) {
 		this.stopConditions = stops;
 	}
@@ -64,6 +68,7 @@ public abstract class Action {
 	}
 	
 	protected final void actionDone() {
+		System.out.println("Action done by " + this.getClass().getName());
 		context.actionDone(this);
 	}
 	
@@ -78,6 +83,10 @@ public abstract class Action {
 	public void deadLockResolved() {
 		isDeadLock = false;
 		
+	}
+	
+	public String getName() {
+		return this.getClass().getName();
 	}
 	
 }

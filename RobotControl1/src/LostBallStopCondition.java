@@ -1,15 +1,18 @@
 
 public class LostBallStopCondition extends StopCondition {
 
-	public LostBallStopCondition(ActionContext context) {
+	private int threshold;
+
+	public LostBallStopCondition(ActionContext context, int threshold) {
 		super(context);
+		this.threshold = threshold;
 	}
 	
-	int max_occourences = 50;
+	int max_occourences = 70;
 
 	@Override
 	public boolean hasToStop() {
-		if(!getSensorManager().isObjectInFront()) {
+		if(!getSensorManager().isObjectInFront(threshold)) {
 			if(max_occourences-- <= 0) {
 				System.out.println("Lost ball");
 				return true;
