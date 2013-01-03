@@ -70,37 +70,31 @@ public abstract class Controller extends RobotController implements ActionContex
 	@Override
 	public void doWork() {
 		sensorMgr.update();
-		updateWorldMap();
-		if(checkStopConditions()) {
-//			setWaitTime(2000);
-//			motionMgr.stop();
-			actionDone(currentAction);
+		updateWorldMap(); // global
+		checkStopConditions(); // global
+		if(temporaryAction instanceof DeadLockAction) {
+			temporaryAction.doAction();
+			return;
+		}
+		if(isDeadLock()) {
+			if(deadLockAction == null) {
+				deadLockAction = new DeadLockAction(this);
+			}
+			addTemporarySubAction(deadLockAction);
 		} else {
-			if(temporaryAction instanceof DeadLockAction) {
-				temporaryAction.doAction();
-				return;
-			}
-			if(isDeadLock()) {
-				if(deadLockAction == null) {
-					deadLockAction = new DeadLockAction(this);
-				}
-				addTemporarySubAction(deadLockAction);
-			} else {
-				
-			}
-			if(temporaryAction != null) {
-				if(!(temporaryAction instanceof DeadLockAction)) {
-					temporaryAction.deadLockResolved();
-				}					
-				System.out.println(temporaryAction.getName());
-				temporaryAction.doAction();
-				return;
-			} else if(currentAction != null) {
-				currentAction.deadLockResolved();
-				System.out.println(currentAction.getName());
-				currentAction.doAction();
-			}
 			
+		}
+		if(temporaryAction != null) {
+			if(!(temporaryAction instanceof DeadLockAction)) {
+				temporaryAction.deadLockResolved();
+			}					
+			System.out.println(temporaryAction.getName());
+			temporaryAction.doAction();
+			return;
+		} else if(currentAction != null) {
+			currentAction.deadLockResolved();
+			System.out.println(currentAction.getName());
+			currentAction.doAction();
 		}
 	}
 
@@ -142,14 +136,12 @@ public abstract class Controller extends RobotController implements ActionContex
 	
 	
 
-	protected void updateWorldMap() {
-		
+	protected void updateWorldMap() {		
 		// CURRENTLY NOT NEEDED
 	}
 
-	private boolean checkStopConditions() {
+	private void checkStopConditions() {
 		// CURRENTLY NOT NEEDED
-		return false;
 	}
 
 

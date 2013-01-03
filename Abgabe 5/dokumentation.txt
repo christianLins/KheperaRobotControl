@@ -1,5 +1,0 @@
-Die Subsumption Architektur richtet sich nach den Folien der Vorlesungen (Architektural Patterns).
-Die Controller erhalten Tasks, welche Subtasks enthalten können.
-StopConditions dienen zur Terminisierung der Tasks.
-
-Für die Aufgabenstellung in dieser Übung wiederholt sich das Prozedere, weswegen wir dem Controller die Flag "repeate (tasks)" mitgeben.

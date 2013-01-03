@@ -58,7 +58,7 @@
   </class>  
   <class id="8" corner="BOTTOM_RIGHT" language="java" name="PushBallsToWallController" project="RobotControl1" 
     file="/RobotControl1/src/PushBallsToWallController.java" binary="false">    
-    <position height="191" width="175" x="348" y="529"/>    
+    <position height="191" width="175" x="346" y="521"/>    
     <display autosize="false" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    

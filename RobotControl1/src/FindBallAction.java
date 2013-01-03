@@ -36,8 +36,8 @@ public class FindBallAction extends Action {
 	private int BASE_SPEED_TERM = 1;
 	
 	
-	float left = 0;
-    float right = 0;
+	private float left = 0;
+    private float right = 0;
 
 	
 

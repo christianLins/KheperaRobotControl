@@ -1,0 +1,38 @@
+<sequence-diagram version="1.0.11" icons="true" automaticImage="PNG">  
+  <object id="1" language="java" name="edu.wsu.KheperaSimulator.RobotController" project="WSU_RobotSimulator" 
+    file="/WSU_RobotSimulator/src/edu/wsu/KheperaSimulator/RobotController.java" binary="false" label="robotController" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="433" y="0"/>    
+    <execution id="2">      
+      <position height="281" width="0" x="0" y="78"/>    
+    </execution>    
+    <execution id="4">      
+      <position height="218" width="0" x="0" y="120"/>    
+    </execution>    
+    <execution id="6">      
+      <position height="21" width="7" x="63" y="171"/>    
+    </execution>    
+    <execution id="8">      
+      <position height="21" width="0" x="0" y="232"/>    
+    </execution>    
+    <execution id="10">      
+      <position height="21" width="7" x="60" y="296"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="run():void">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="doWork():void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" operation="sleep(long):void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" operation="close():void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>
+</sequence-diagram>
